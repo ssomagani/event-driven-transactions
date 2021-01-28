@@ -1,0 +1,17 @@
+{
+	"ulid": "01EX3WNYCD6M8WECGASCND20FD",
+	"minTime": 1611806408933,
+	"maxTime": 1611813600000,
+	"stats": {
+		"numSamples": 552718,
+		"numSeries": 1395,
+		"numChunks": 3993
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01EX3WNYCD6M8WECGASCND20FD"
+		]
+	},
+	"version": 1
+}
