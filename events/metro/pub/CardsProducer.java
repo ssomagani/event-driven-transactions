@@ -8,13 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.voltdb.CLIConfig;
 
 import metro.CardEvent;
@@ -53,11 +56,25 @@ public class CardsProducer {
     }
 
     public void publish(List<CardEvent> rechargeEvents) {
+        Future<RecordMetadata>[] futures = new Future[rechargeEvents.size()];
         if (rechargeEvents != null) {
-            for (CardEvent rechargeEvent : rechargeEvents) {
-                producer.send(new ProducerRecord<Integer, CardEvent>(topicName, rechargeEvent));
+            for (int i=0; i<rechargeEvents.size(); i++) {
+                CardEvent rechargeEvent = rechargeEvents.get(i);
+                futures[i] = producer.send(new ProducerRecord<Integer, CardEvent>(topicName, rechargeEvent));
             }
         }
+//        
+//        for(Future<RecordMetadata> future: futures) {
+//            if(future.isDone()) {
+//                try {
+//                    System.out.println(future.get().toString());
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
     public static Config CONFIG = new Config();
@@ -108,9 +125,10 @@ public class CardsProducer {
     public List<CardEvent> getRechargeActivityRecords(int count) {
         final ArrayList<CardEvent> records = new ArrayList<>();
         int amt = (ThreadLocalRandom.current().nextInt(18)+2)*1000;
-        ThreadLocalRandom.current().ints(count, 0, count).forEach((cardId)
+        int stationId = ThreadLocalRandom.current().nextInt(1, 18);
+        ThreadLocalRandom.current().ints(count, 0, CONFIG.cardcount).forEach((cardId)
                 -> {
-                    records.add(new CardEvent(amt, cardId));
+                    records.add(new CardEvent(cardId, amt, stationId));
                     }
         );
         return records;

@@ -1,8 +1,10 @@
 
 --file -inlinebatch END_OF_DROP_BATCH
-
+DROP TOPIC CARD_ALERT_EXPORT					IF EXISTS;
 
 DROP TOPIC RECHARGE                             IF EXISTS;
+
+DROP VIEW card_export_stats						IF EXISTS;
 
 DROP PROCEDURE RechargeCard                     IF EXISTS;
 
@@ -28,10 +30,9 @@ CREATE TABLE CARDS(
 );
 PARTITION TABLE cards ON COLUMN card_id;
 
-
 CREATE STREAM CARD_ALERT_EXPORT PARTITION ON COLUMN CARD_ID (
   card_id               INTEGER        NOT NULL,
-  export_time           BIGINT         NOT NULL,
+  export_time           TIMESTAMP      NOT NULL,
   station_name          VARCHAR(25)    NOT NULL,
   name                  VARCHAR(50)    NOT NULL,
   phone                 VARCHAR(10)    NOT NULL, -- phone number, assumes North America
@@ -40,13 +41,12 @@ CREATE STREAM CARD_ALERT_EXPORT PARTITION ON COLUMN CARD_ID (
   alert_message         VARCHAR(64)    NOT NULL
 );
 
-
-CREATE PROCEDURE RechargeCard PARTITION ON TABLE cards COLUMN card_id PARAMETER 1 AS
-BEGIN
-UPDATE cards SET balance = balance + ?
-WHERE card_id = ? AND card_type = 0;
-END;
+CREATE PROCEDURE PARTITION ON TABLE cards COLUMN card_id PARAMETER 0 FROM CLASS metro.cards.RechargeCard;
 
 CREATE TOPIC RECHARGE execute procedure RechargeCard;
+
+CREATE VIEW card_export_stats(card_id, station_name, rechargeCount) AS SELECT card_id, station_name, count(*) from CARD_ALERT_EXPORT GROUP BY card_id, station_name;
+
+CREATE TOPIC using stream CARD_ALERT_EXPORT properties(topic.format=avro);
 
 --END_OF_BATCH
