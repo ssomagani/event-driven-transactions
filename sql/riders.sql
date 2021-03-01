@@ -1,13 +1,12 @@
-
 --file -inlinebatch END_OF_DROP_BATCH
 
 DROP PROCEDURE ProcessExit                      IF EXISTS;
 DROP PROCEDURE ValidateEntry                    IF EXISTS;
 
-DROP VIEW CARD_HISTORY_SECOND            IF EXISTS;
+DROP VIEW CARD_HISTORY_SECOND            		IF EXISTS;
 
 DROP TOPIC TRIPS                                IF EXISTS;
-DROP TOPIC FRAUD                               IF EXISTS;
+DROP TOPIC FRAUD                               	IF EXISTS;
 
 DROP STREAM TRIPS                               IF EXISTS;
 DROP STREAM FRAUD                               IF EXISTS;
