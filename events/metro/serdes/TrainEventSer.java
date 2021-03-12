@@ -1,4 +1,4 @@
-package metro.serde;
+package metro.serdes;
 
 import java.time.format.DateTimeFormatter;
 

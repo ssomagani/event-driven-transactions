@@ -25,6 +25,7 @@ CREATE TABLE train_events (
 PARTITION TABLE train_events ON COLUMN station_id;
 CREATE INDEX taStationDepart ON train_events (station_id, time);
 
+
 -------------- PROCEDURES -------------------------------------------------------
 
 CREATE topic TRAINTOPIC execute procedure train_events.insert;
