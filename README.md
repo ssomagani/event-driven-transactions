@@ -9,7 +9,7 @@ This application demonstrates how VoltDB can support event-driven architectures 
 This example application is imagined as an IT system that supports a subway system by handling event streams and real time request-responses.
 Simulated requests to process card swipes (to let passengers onto the platform) and event streams from exit swipes, trains and stations are used to demonstrate the applicability of VoltDB for event-driven applications that need transactions.
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embeddedchart/249693fa-1a95-4305-84b9-0af3ff35fa3e" id="BDyjk-Oy.yK7"></iframe></div>
+[<img src="https://lucid.app/documents/embeddedchart/249693fa-1a95-4305-84b9-0af3ff35fa3e">]
 
 ## How to run on a single machine
 --------
